@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { githubApi } from "../../api/githubApi";
-import { sleep } from "../../api/helpers/time";
 import { Label } from "../interfaces";
+import { sleep } from "../../helpers";
 
 const getLabels = async (): Promise<Label[]> => {
   await sleep(2);
-  const { data } = await githubApi.get<Label[]>("/labels");
-  console.log({ data });
+  const { data } = await githubApi.get<Label[]>("/labels?per_page=100");
   return data;
 };
 

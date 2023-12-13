@@ -1,8 +1,9 @@
 import { FiInfo, FiMessageSquare, FiCheckCircle } from "react-icons/fi";
-import { Issue } from "../interfaces";
+import { Issue, State } from "../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getIssueComments, getIssueInfo } from "../hooks";
+import { timeSince } from "../../helpers";
 
 interface Props {
   issue: Issue;
@@ -37,14 +38,28 @@ export const IssueItem = ({ issue }: Props) => {
       onMouseEnter={presetData}
     >
       <div className="card-body d-flex align-items-center">
-        <FiInfo size={30} color="red" />
-        {/* <FiCheckCircle size={30} color="green" /> */}
+        {issue.state === State.Closed ? (
+          <FiCheckCircle size={30} color="green" />
+        ) : (
+          <FiInfo size={30} color="red" />
+        )}
 
         <div className="d-flex flex-column flex-fill px-2">
           <span>{title}</span>
           <span className="issue-subinfo">
-            #{number} opened 2 days ago by{" "}
+            #{number} opened {timeSince(issue.created_at)} ago by{" "}
             <span className="fw-bold">{user.login}</span>
+            <div>
+              {issue.labels.map((label) => (
+                <span
+                  key={label.id}
+                  className="badge rounded-pill m-1"
+                  style={{ backgroundColor: `#${label.color}`, color: "black" }}
+                >
+                  {label.name}
+                </span>
+              ))}
+            </div>
           </span>
         </div>
 
